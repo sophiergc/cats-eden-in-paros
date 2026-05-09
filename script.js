@@ -22,15 +22,6 @@ const CONFIG = {
   defaultMonthly: 10,
   defaultOneoff: 50,
 
-  // ---- FILM STRIP ----
-  // Order is from `filmOrder` (numbers refer to filmNN.jpg). Put Martina-holding-cats first.
-  // Anything not listed here will be appended at the end.
-  filmCount: 22,
-  filmOrder: [
-    // (Edit this list to put your favourite Martina-with-cats shots first.
-    //  e.g. [18, 19, 20, 21, 22, 1, 2, 3, ...])
-  ],
-
   // ---- FACEBOOK POSTS ----
   // To get a URL: open the post on FB → click the timestamp → copy URL.
   facebookPosts: [
@@ -238,33 +229,6 @@ document.getElementById("donateOneoff").addEventListener("click", () => {
   const amt = Math.max(1, Number(state.oneoffAmount) || CONFIG.defaultOneoff);
   window.open(paypalOneoffURL(amt), "_blank", "noopener");
 });
-
-/* ============================================================
-   Build film gallery
-   Photos that fail to load show a "drop into images/film/" hint.
-   ============================================================ */
-function buildFilmGallery() {
-  const grid = document.getElementById("filmGrid");
-  if (!grid) return;
-  const all = Array.from({ length: CONFIG.filmCount }, (_, i) => i + 1);
-  const ordered = (CONFIG.filmOrder && CONFIG.filmOrder.length)
-    ? [...CONFIG.filmOrder, ...all.filter(n => !CONFIG.filmOrder.includes(n))]
-    : all;
-  grid.innerHTML = ordered.map((n) => {
-    const num = String(n).padStart(2, "0");
-    return `
-      <figure class="film-card reveal" role="listitem">
-        <div class="film-card-img">
-          <img src="images/film/film${num}.jpg" alt="" loading="lazy"
-               onerror="this.style.display='none'; this.parentNode.classList.add('empty');" />
-        </div>
-        <figcaption>roll · ${num}</figcaption>
-      </figure>
-    `;
-  }).join("");
-  observeReveals(grid);
-}
-buildFilmGallery();
 
 /* ============================================================
    Carousels — cycle slides with a soft fade
